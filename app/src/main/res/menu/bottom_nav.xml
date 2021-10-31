@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id = "@+id/bottom_weekly"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_view_week_24"
+        android:title="Weekly" />
+
+    <item
+        android:id = "@+id/bottom_myday"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_today_24"
+        android:title="MyDay" />
+
+    <item
+        android:id = "@+id/bottom_month"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="Month" />
+
+    <item
+        android:id = "@+id/bottom_set"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="Set" />
+
+</menu>
