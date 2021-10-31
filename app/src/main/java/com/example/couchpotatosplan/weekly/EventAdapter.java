@@ -32,7 +32,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
         if (convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.event_cell, parent, false);
 
-        TextView eventCellTV = convertView.findViewById(R.id.eventCellTV);
+        TextView eventCellTV = convertView.findViewById(R.id.time_tv);
 
         String eventTitle = event.getName() +" "+ CalendarUtils.formattedTime(event.getTime());
         eventCellTV.setText(eventTitle);
