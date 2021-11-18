@@ -1,4 +1,4 @@
-package com.example.couchpotatosplan.myday;
+package com.example.couchpotatosplan.month;
 
 import static com.example.couchpotatosplan.weekly.CalendarUtils.formattedDate;
 
@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -26,13 +25,16 @@ import com.google.firebase.database.ValueEventListener;
 import java.time.LocalDate;
 import java.util.Random;
 
-public class FragmentDialog extends DialogFragment {
+public class ExcludeDialog extends DialogFragment {
 
     private EditText eventNameET;
-    private EditText DateET;
+    private EditText startET;
+    private EditText endET;
     private Button save_btn;
+    private Button cancel_btn;
     private DatabaseReference mDatabase;
     private long postNum;
+
 
     @Nullable
     @Override
@@ -46,7 +48,7 @@ public class FragmentDialog extends DialogFragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists())
-                    postNum = (snapshot.child("event").getChildrenCount());
+                    postNum = (snapshot.child("exclude").getChildrenCount());
             }
 
             @Override
@@ -55,8 +57,10 @@ public class FragmentDialog extends DialogFragment {
             }
         });
 
-        View view = inflater.inflate(R.layout.test_dialog, container, false);
+        View view = inflater.inflate(R.layout.exclude_dialog, container, false);
+
         save_btn = (Button) view.findViewById(R.id.save_btn);
+        cancel_btn = (Button) view.findViewById(R.id.cancel_btn);
 
         initWidgets(view);
         saveEventAction(view);
@@ -67,7 +71,8 @@ public class FragmentDialog extends DialogFragment {
     private void initWidgets(View view)
     {
         eventNameET = view.findViewById(R.id.eventNameET);
-        DateET = view.findViewById(R.id.DateET);
+        startET = view.findViewById(R.id.starttime);
+        endET = view.findViewById(R.id.endtime);
     }
 
     public void saveEventAction(View view)
@@ -76,10 +81,10 @@ public class FragmentDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 String eventName = eventNameET.getText().toString();
-                String Date = DateET.getText().toString();
+                int starttime = Integer.parseInt(startET.getText().toString());
+                int endtime = Integer.parseInt(endET.getText().toString());
                 if(!eventName.equals("")) {
-                    writeNewEvent(Date, RandomNum(), eventName, false);
-                    //writeNewEvent(formattedDate(LocalDate.now()), RandomNum(), eventName, false);
+                    writeNewEvent(starttime, endtime, eventName);
                 } else {
                     Toast.makeText(getContext(), "내용을 입력하세요", Toast.LENGTH_LONG).show();
                 }
@@ -88,21 +93,14 @@ public class FragmentDialog extends DialogFragment {
         });
     }
 
-    public void writeNewEvent(String date, int time, String content, boolean checked) {
-        MyDayEvent event = new MyDayEvent(postNum+1, date, time, content, checked);
-        mDatabase.child("event").child(String.valueOf(postNum+1)).setValue(event);
-    }
-
-    public int RandomNum() {
-        Random random = new Random();
-        int time = random.nextInt(24) + 1;
-
-        return time;
+    public void writeNewEvent(int start, int end, String content) {
+        MonthEvent event = new MonthEvent(postNum+1, start, end, content);
+        mDatabase.child("exclude").child(String.valueOf(postNum+1)).setValue(event);
     }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new MyDayFragment()).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new MonthFragment()).commit();
     }
 }

@@ -3,6 +3,29 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable-v24/ic_baseline_view_week_24.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable/custom_checkbox.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable/ic_baseline_check_circle_24.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable/ic_launcher_background.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable/switch_thumb.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable/switch_track_off.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable/switch_track_on.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable/switch_track_selector.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/activity_main.xml" value="0.22314814814814815" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/calendar_cell.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/event_cell.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/exclude_cell.xml" value="0.264" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/exclude_dialog.xml" value="0.18229166666666666" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/month_exclude.xml" value="0.1" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/month_fragment.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/myday_event_cell.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/myday_fragment.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/setting_fragment.xml" value="0.4" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/splash_activity.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/test_dialog.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/theme_dialog.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/weekly_fragment.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/app/src/main/res/drawable-v24/ic_baseline_check_circle_outline_true.xml" value="0.26564102564102565" />
         <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/app/src/main/res/drawable-v24/ic_baseline_search_24.xml" value="0.15833333333333333" />
         <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/app/src/main/res/drawable-v24/ic_baseline_settings_24.xml" value="0.1" />
