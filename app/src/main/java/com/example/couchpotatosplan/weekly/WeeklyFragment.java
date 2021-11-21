@@ -5,10 +5,11 @@ import static com.example.couchpotatosplan.weekly.CalendarUtils.formattedDate;
 import static com.example.couchpotatosplan.weekly.CalendarUtils.monthDayFromDate;
 import static com.example.couchpotatosplan.weekly.CalendarUtils.monthYearFromDate;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,42 +26,45 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.couchpotatosplan.MainActivity;
 import com.example.couchpotatosplan.R;
+import com.example.couchpotatosplan.month.ExcludeEvent;
+import com.example.couchpotatosplan.month.ExcludeEventList;
+import com.example.couchpotatosplan.month.FixEvent;
+import com.example.couchpotatosplan.month.FixEventList;
 import com.example.couchpotatosplan.myday.MyDayEventList;
 import com.example.couchpotatosplan.myday.MyDayEvent;
-//import com.example.couchpotatosplan.utils.Theme;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemListener {
     private TextView monthYearText;
     private TextView monthDayText;
     private RecyclerView calendarRecyclerView;
-    private ListView eventListView;
+    private ListView weeklyEventListView;
     private DatePickerDialog dialog;
     private DatabaseReference mDatabase;
-    private WeeklyEventAdapter adapter;
-    private long postNum;
+    private WeeklyEventAdapter weeklyEventAdapter;
+    public long postNumOfWeekly;
+    public long postNumOfExclude;
+    public long postNumOfFix;
+    private View view;
 
     Button previous_btn;
     Button next_btn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.weekly_fragment, container, false);
+        view = inflater.inflate(R.layout.weekly_fragment, container, false);
 
         calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
         monthYearText = view.findViewById(R.id.monthYearTV);
         monthDayText = view.findViewById(R.id.monthDayTV);
-        eventListView = view.findViewById(R.id.eventListView);
+        weeklyEventListView = view.findViewById(R.id.eventListView);
 
         CalendarUtils.selectedDate = LocalDate.now();
 
@@ -79,23 +83,31 @@ public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemLi
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 MyDayEventList.eventsList.clear();
+                ExcludeEventList.eventsList.clear();
+                FixEventList.fixeventsList.clear();
                 if (snapshot.exists()) {
-                    postNum = (snapshot.child("event").getChildrenCount());
+                    postNumOfWeekly = (snapshot.child("event").getChildrenCount());
+                    postNumOfExclude = (snapshot.child("exclude").getChildrenCount());
+                    postNumOfFix = (snapshot.child("fix").getChildrenCount());
                     String theme_num = snapshot.child("theme").getValue().toString();
-                    if (theme_num != null) {
-                        MainActivity.changeTheme(theme_num);
-                    }
+                    MainActivity.changeTheme(theme_num);
                 }
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    for (int i = 1; i <= postNum; i++) {
-                        MyDayEvent post = dataSnapshot.child(String.valueOf(i)).getValue(MyDayEvent.class);
-                        MyDayEventList.eventsList.add(post);
-                    }
+                for (DataSnapshot dataSnapshot : snapshot.child("event").getChildren()) {
+                    MyDayEvent post = dataSnapshot.getValue(MyDayEvent.class);
+                    MyDayEventList.eventsList.add(post);
+                }
+                for (DataSnapshot dataSnapshot : snapshot.child("exclude").getChildren()) {
+                    ExcludeEvent post = dataSnapshot.getValue(ExcludeEvent.class);
+                    ExcludeEventList.eventsList.add(post);
+                }
+                for (DataSnapshot dataSnapshot : snapshot.child("fix").getChildren()) {
+                    FixEvent post = dataSnapshot.getValue(FixEvent.class);
+                    FixEventList.fixeventsList.add(post);
                 }
                 ArrayList<MyDayEvent> dailyEvents = MyDayEventList.eventsForDate(formattedDate(CalendarUtils.selectedDate));
-                adapter = new WeeklyEventAdapter(view.getContext(), dailyEvents);
-                eventListView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+                weeklyEventAdapter = new WeeklyEventAdapter(view.getContext(), dailyEvents);
+                weeklyEventListView.setAdapter(weeklyEventAdapter);
+                weeklyEventAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -112,25 +124,6 @@ public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemLi
         setWeekView();
 
         return view;
-    }
-
-    public static Boolean empty(Object obj) {
-        if (obj == null) {
-            return true;
-        }
-        if ((obj instanceof String) && (((String) obj).trim().length() == 0)) {
-            return true;
-        }
-        if (obj instanceof Map) {
-            return ((Map<?, ?>) obj).isEmpty();
-        }
-        if (obj instanceof List) {
-            return ((List<?>) obj).isEmpty();
-        }
-        if (obj instanceof Object[]) {
-            return (((Object[]) obj).length == 0);
-        }
-        return false;
     }
 
     private DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
@@ -189,7 +182,8 @@ public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemLi
 
     private void setEventAdpater() {
         ArrayList<MyDayEvent> dailyEvents = MyDayEventList.eventsForDate(formattedDate(CalendarUtils.selectedDate));
-        adapter = new WeeklyEventAdapter(getActivity().getApplicationContext(), dailyEvents);
-        eventListView.setAdapter(adapter);
+        weeklyEventAdapter = new WeeklyEventAdapter(getActivity().getApplicationContext(), dailyEvents);
+        weeklyEventListView.setAdapter(weeklyEventAdapter);
     }
+
 }

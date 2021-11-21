@@ -78,8 +78,31 @@ public class FragmentDialog extends DialogFragment {
                 String eventName = eventNameET.getText().toString();
                 String Date = DateET.getText().toString();
                 if(!eventName.equals("")) {
-                    writeNewEvent(Date, RandomNum(), eventName, false);
-                    //writeNewEvent(formattedDate(LocalDate.now()), RandomNum(), eventName, false);
+                    if(MyDayEventList.isTimeTableFooled()) {
+                        dismiss();
+                        return; // 시간표가 꽉차면 종료
+                    }
+
+                    int startTime = 0;
+                    boolean ok = true;
+                    if(!MyDayEventList.eventsList.isEmpty()) { //비어있지 않으면 검사후 적용
+                        while (ok) {
+                            ok = false;
+                            startTime = RandomNum();
+                            for (MyDayEvent e : MyDayEventList.eventsList) {
+                                if(e != null) {
+                                    if (e.isPiled(startTime)) {
+                                        ok = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else // 비어있으면 바로 적용
+                    {
+                        startTime = RandomNum();
+                    }
+                    writeNewEvent(Date, startTime, eventName, false);
                 } else {
                     Toast.makeText(getContext(), "내용을 입력하세요", Toast.LENGTH_LONG).show();
                 }
@@ -90,10 +113,11 @@ public class FragmentDialog extends DialogFragment {
 
     public void writeNewEvent(String date, int time, String content, boolean checked) {
         MyDayEvent event = new MyDayEvent(postNum+1, date, time, content, checked);
+        MyDayEventList.eventsList.add(event);
         mDatabase.child("event").child(String.valueOf(postNum+1)).setValue(event);
     }
 
-    public int RandomNum() {
+    public static int RandomNum() {
         Random random = new Random();
         int time = random.nextInt(24) + 1;
 
@@ -103,6 +127,7 @@ public class FragmentDialog extends DialogFragment {
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
+        MyDayEventList.eventsForDate(formattedDate(LocalDate.now()));
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new MyDayFragment()).commit();
     }
 }

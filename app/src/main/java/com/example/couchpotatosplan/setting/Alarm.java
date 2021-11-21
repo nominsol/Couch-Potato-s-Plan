@@ -12,8 +12,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.view.LayoutInflater;
-import android.widget.TextView;
 
 import androidx.core.app.NotificationCompat;
 
@@ -28,15 +26,24 @@ import java.util.ArrayList;
 public class Alarm extends BroadcastReceiver {
     private final String DEFAULT = "DEFAULT";
     private String title = "오늘의 할일";
-    private String content = "운동하기";
+    private String content = "";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        ArrayList<MyDayEvent> dailyEvents = MyDayEventList.eventsForDate(formattedDate(LocalDate.now()));
 
-        for(Object object : dailyEvents) {
-//            content += dailyEvents.toString();
+        ArrayList<MyDayEvent> dailyEvents = MyDayEventList.eventsForDate(formattedDate(LocalDate.now()));    //일정 리스트
+
+        //오늘의 일정들을 스트링에 저장
+        for(MyDayEvent event : dailyEvents)
+        {
+            if(event.getDate().equals(formattedDate(LocalDate.now()))) {
+                content += event.getContent();
+                content += "\n";
+            }
         }
+
+
+
         createNotificationChannel(context, DEFAULT, "default channel", NotificationManager.IMPORTANCE_HIGH);
 
         Intent alarmintent = new Intent(context, MainActivity.class);
@@ -68,4 +75,3 @@ public class Alarm extends BroadcastReceiver {
         notificationManager.notify(id, builder.build());
     }
 }
-

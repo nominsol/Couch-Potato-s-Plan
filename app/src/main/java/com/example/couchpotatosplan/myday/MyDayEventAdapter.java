@@ -1,6 +1,7 @@
 package com.example.couchpotatosplan.myday;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,11 @@ public class MyDayEventAdapter extends ArrayAdapter<MyDayEvent> {
         content_tv.setText(content);
         check.setChecked(event.isChecked());
 
+        if(check.isChecked()) {
+            content_tv.setPaintFlags(content_tv.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            content_tv.setPaintFlags(0);
+        }
         return view;
     }
 

@@ -1,6 +1,5 @@
 package com.example.couchpotatosplan.month;
 
-import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -19,17 +17,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.couchpotatosplan.R;
-import com.example.couchpotatosplan.weekly.CalendarUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ExcludeDialog extends DialogFragment {
+public class FixDialog extends DialogFragment {
 
     private EditText eventNameET;
     private TextView start_tv;
@@ -50,7 +46,6 @@ public class ExcludeDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        setCancelable(false);
         // Write a message to the database
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -58,7 +53,7 @@ public class ExcludeDialog extends DialogFragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists())
-                    postNum = (snapshot.child("exclude").getChildrenCount());
+                    postNum = (snapshot.child("fix").getChildrenCount());
             }
 
             @Override
@@ -67,7 +62,7 @@ public class ExcludeDialog extends DialogFragment {
             }
         });
 
-        View view = inflater.inflate(R.layout.month_exclude_dialog, container, false);
+        View view = inflater.inflate(R.layout.month_fix_dialog, container, false);
 
         save_btn = (Button) view.findViewById(R.id.save_btn);
         cancel_btn = (Button) view.findViewById(R.id.cancel_btn);
@@ -80,9 +75,9 @@ public class ExcludeDialog extends DialogFragment {
 
     private void initWidgets(View view)
     {
-        eventNameET = view.findViewById(R.id.eventNameET);
-        start_tv = view.findViewById(R.id.starttime);
-        end_tv = view.findViewById(R.id.endtime);
+        eventNameET = view.findViewById(R.id.fix_eventNameET);
+        start_tv = view.findViewById(R.id.fix_starttime);
+        end_tv = view.findViewById(R.id.fix_endtime);
     }
 
     public void EventAction(View view)
@@ -128,14 +123,14 @@ public class ExcludeDialog extends DialogFragment {
     }
 
     public void writeNewEvent(int start_hour, int start_min, int end_hour, int end_min, String content) {
-        ExcludeEvent event = new ExcludeEvent(postNum+1, start_hour, start_min, end_hour, end_min, content);
-        mDatabase.child("exclude").child(String.valueOf(postNum+1)).setValue(event);
+        FixEvent event = new FixEvent(postNum+1, start_hour, start_min, end_hour, end_min, content);
+        mDatabase.child("fix").child(String.valueOf(postNum+1)).setValue(event);
     }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new MonthExcludeFragment()).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new MonthFixFragment()).commit();
     }
 
     private TimePickerDialog.OnTimeSetListener startTimelistener = new TimePickerDialog.OnTimeSetListener() {
