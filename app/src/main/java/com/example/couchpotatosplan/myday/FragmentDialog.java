@@ -4,6 +4,7 @@ import static com.example.couchpotatosplan.weekly.CalendarUtils.formattedDate;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +18,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.couchpotatosplan.R;
+import com.example.couchpotatosplan.month.ExcludeEvent;
+import com.example.couchpotatosplan.month.ExcludeEventList;
+import com.example.couchpotatosplan.month.FixEvent;
+import com.example.couchpotatosplan.month.FixEventList;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 public class FragmentDialog extends DialogFragment {
@@ -77,12 +85,15 @@ public class FragmentDialog extends DialogFragment {
             public void onClick(View view) {
                 String eventName = eventNameET.getText().toString();
                 String Date = DateET.getText().toString();
+                ArrayList<ExcludeEvent> exevents = new ArrayList<>();
+                ArrayList<FixEvent> fxevents = new ArrayList<>();
+                exevents = ExcludeEventList.eventsForDate(formattedDate(LocalDate.now()));
+                fxevents = FixEventList.eventsForDate(formattedDate(LocalDate.now()));
                 if(!eventName.equals("")) {
                     if(MyDayEventList.isTimeTableFooled()) {
                         dismiss();
                         return; // 시간표가 꽉차면 종료
                     }
-
                     int startTime = 0;
                     boolean ok = true;
                     if(!MyDayEventList.eventsList.isEmpty()) { //비어있지 않으면 검사후 적용
@@ -96,6 +107,31 @@ public class FragmentDialog extends DialogFragment {
                                     }
                                 }
                             }
+                            if (!exevents.isEmpty()) {
+                                for (ExcludeEvent e : exevents) {
+                                    //Log.d("MyLog", "exclud : " + e.getStart_hour() + "~" + e.getEnd_hour());
+                                    if (e.isPiled(startTime)) {
+                                        ok = true;
+                                    }
+                                }
+                            }
+                            if (!fxevents.isEmpty()) {
+                                for (FixEvent e : fxevents) {
+                                    //Log.d("MyLog", "fixed : " + e.getStart_hour() + "~" + e.getEnd_hour());
+                                    if (e.isPiled(startTime)) {
+                                        ok = true;
+                                    }
+                                }
+                            }
+                            long mNow = System.currentTimeMillis();
+                            java.util.Date mDate = new Date(mNow);
+                            SimpleDateFormat mFormat = new SimpleDateFormat("H");
+                            if(startTime <= Integer.parseInt(mFormat.format(mDate)))
+                            {
+                                Log.d("MyLog", mFormat.format(mDate) + "time , now");
+                                ok = true;
+                            }
+                            Log.d("MyLog", mFormat.format(mDate) + "time , now");
                         }
                     }
                     else // 비어있으면 바로 적용

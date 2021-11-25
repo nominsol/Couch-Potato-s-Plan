@@ -12,6 +12,7 @@
         <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable/ic_baseline_check_circle_24.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable/ic_baseline_check_circle_outline_24.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable/ic_baseline_chevron_left_24.xml" value="0.1" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable/ic_baseline_more_time_24.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable/ic_baseline_rotate_left_24.xml" value="0.1" />
         <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable/ic_launcher_background.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable/ic_mainicon_background.xml" value="0.26979166666666665" />
@@ -40,6 +41,7 @@
         <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/theme_dialog.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/weekly_fragment.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/layout/weekly_test_dialog.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/menu/bottom_nav.xml" value="0.1" />
         <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.18958333333333333" />
         <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/app/src/main/res/drawable-v24/ic_baseline_check_circle_outline_true.xml" value="0.26564102564102565" />
         <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/app/src/main/res/drawable-v24/ic_baseline_search_24.xml" value="0.15833333333333333" />

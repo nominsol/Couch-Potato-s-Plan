@@ -16,8 +16,8 @@
     <item
         android:id = "@+id/bottom_month"
         android:enabled="true"
-        android:icon="@drawable/ic_baseline_search_24"
-        android:title="Month" />
+        android:icon="@drawable/ic_baseline_more_time_24"
+        android:title="Time" />
 
     <item
         android:id = "@+id/bottom_set"

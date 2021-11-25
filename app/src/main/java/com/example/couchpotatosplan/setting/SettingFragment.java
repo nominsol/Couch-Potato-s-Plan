@@ -46,7 +46,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-
+//주석
 //설정화면..
 public class SettingFragment extends Fragment {
 
