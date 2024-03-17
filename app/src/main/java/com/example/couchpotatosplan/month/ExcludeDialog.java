@@ -1,6 +1,5 @@
 package com.example.couchpotatosplan.month;
 
-import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -19,14 +17,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.couchpotatosplan.R;
-import com.example.couchpotatosplan.weekly.CalendarUtils;
+import com.example.couchpotatosplan.myday.MyDayEvent;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class ExcludeDialog extends DialogFragment {
@@ -37,6 +36,8 @@ public class ExcludeDialog extends DialogFragment {
     private Button save_btn;
     private Button cancel_btn;
     private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
     private TimePickerDialog dialog;
     private long postNum;
     private int start_time_hour = -1;
@@ -53,12 +54,20 @@ public class ExcludeDialog extends DialogFragment {
         setCancelable(false);
         // Write a message to the database
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
 
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists())
-                    postNum = (snapshot.child("exclude").getChildrenCount());
+                if (snapshot.exists()) {
+                    for (DataSnapshot dataSnapshot : snapshot.child(currentUser.getUid()).child("exclude").getChildren()) {
+                        ExcludeEvent post = dataSnapshot.getValue(ExcludeEvent.class);
+                        if (post != null) {
+                            postNum = post.getId();
+                        }
+                    }
+                }
             }
 
             @Override
@@ -80,7 +89,7 @@ public class ExcludeDialog extends DialogFragment {
 
     private void initWidgets(View view)
     {
-        eventNameET = view.findViewById(R.id.eventNameET);
+        eventNameET = view.findViewById(R.id.eventET);
         start_tv = view.findViewById(R.id.starttime);
         end_tv = view.findViewById(R.id.endtime);
     }
@@ -129,7 +138,7 @@ public class ExcludeDialog extends DialogFragment {
 
     public void writeNewEvent(int start_hour, int start_min, int end_hour, int end_min, String content) {
         ExcludeEvent event = new ExcludeEvent(postNum+1, start_hour, start_min, end_hour, end_min, content);
-        mDatabase.child("exclude").child(String.valueOf(postNum+1)).setValue(event);
+        mDatabase.child(currentUser.getUid()).child("exclude").child(String.valueOf(postNum+1)).setValue(event);
     }
 
     @Override

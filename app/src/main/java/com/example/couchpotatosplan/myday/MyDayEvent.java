@@ -22,14 +22,6 @@ public class MyDayEvent {
         this.content = content;
         this.checked = checked;
     }
-    public boolean isPiled(int t)
-    {
-        if(t == time)
-        {
-            return true;
-        }
-        return false;
-    }
 
     public Long getId() {
         return id;

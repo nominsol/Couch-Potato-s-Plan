@@ -46,7 +46,7 @@
         tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
     <ListView
-        android:id="@+id/eventListView"
+        android:id="@+id/mydayeventListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginLeft="30dp"

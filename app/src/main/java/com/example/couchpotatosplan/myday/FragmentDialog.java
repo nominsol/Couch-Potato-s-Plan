@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -22,6 +21,9 @@ import com.example.couchpotatosplan.month.ExcludeEvent;
 import com.example.couchpotatosplan.month.ExcludeEventList;
 import com.example.couchpotatosplan.month.FixEvent;
 import com.example.couchpotatosplan.month.FixEventList;
+import com.example.couchpotatosplan.weekly.CalendarUtils;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
@@ -37,9 +40,11 @@ import java.util.Random;
 public class FragmentDialog extends DialogFragment {
 
     private EditText eventNameET;
-    private EditText DateET;
     private Button save_btn;
+    private Button cancle_btn;
     private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
     private long postNum;
 
     @Nullable
@@ -49,12 +54,20 @@ public class FragmentDialog extends DialogFragment {
 
         // Write a message to the database
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
 
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists())
-                    postNum = (snapshot.child("event").getChildrenCount());
+                if (snapshot.exists()) {
+                    for (DataSnapshot dataSnapshot : snapshot.child(currentUser.getUid()).child("event").getChildren()) {
+                        MyDayEvent post = dataSnapshot.getValue(MyDayEvent.class);
+                        if (post != null) {
+                            postNum = post.getId();
+                        }
+                    }
+                }
             }
 
             @Override
@@ -63,8 +76,9 @@ public class FragmentDialog extends DialogFragment {
             }
         });
 
-        View view = inflater.inflate(R.layout.test_dialog, container, false);
+        View view = inflater.inflate(R.layout.add_event_dialog, container, false);
         save_btn = (Button) view.findViewById(R.id.save_btn);
+        cancle_btn = (Button) view.findViewById(R.id.cancel_btn);
 
         initWidgets(view);
         saveEventAction(view);
@@ -72,92 +86,78 @@ public class FragmentDialog extends DialogFragment {
         return view;
     }
 
-    private void initWidgets(View view)
-    {
-        eventNameET = view.findViewById(R.id.eventNameET);
-        DateET = view.findViewById(R.id.DateET);
+    private void initWidgets(View view) {
+        eventNameET = view.findViewById(R.id.eventContentET);
     }
 
-    public void saveEventAction(View view)
-    {
+    public void saveEventAction(View view) {
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String eventName = eventNameET.getText().toString();
-                String Date = DateET.getText().toString();
-                ArrayList<ExcludeEvent> exevents = new ArrayList<>();
-                ArrayList<FixEvent> fxevents = new ArrayList<>();
-                exevents = ExcludeEventList.eventsForDate(formattedDate(LocalDate.now()));
-                fxevents = FixEventList.eventsForDate(formattedDate(LocalDate.now()));
-                if(!eventName.equals("")) {
-                    if(MyDayEventList.isTimeTableFooled()) {
-                        dismiss();
-                        return; // 시간표가 꽉차면 종료
-                    }
-                    int startTime = 0;
-                    boolean ok = true;
-                    if(!MyDayEventList.eventsList.isEmpty()) { //비어있지 않으면 검사후 적용
-                        while (ok) {
-                            ok = false;
-                            startTime = RandomNum();
-                            for (MyDayEvent e : MyDayEventList.eventsList) {
-                                if(e != null) {
-                                    if (e.isPiled(startTime)) {
-                                        ok = true;
-                                    }
-                                }
+                int randomNum = RandomNum();
+
+                if (!eventName.equals("")) {
+                    boolean flag; // randomNumber check
+                    ArrayList<MyDayEvent> myDayEvents = MyDayEventList.eventsForDate(formattedDate(LocalDate.now()));
+
+                    while(true) {
+                        flag = false;
+                        // event list 확인
+                        for (MyDayEvent item : myDayEvents) {
+                            if (randomNum == item.getTime()) {
+                                flag = true;
+                                break;
                             }
-                            if (!exevents.isEmpty()) {
-                                for (ExcludeEvent e : exevents) {
-                                    //Log.d("MyLog", "exclud : " + e.getStart_hour() + "~" + e.getEnd_hour());
-                                    if (e.isPiled(startTime)) {
-                                        ok = true;
-                                    }
-                                }
+                        }
+                        // Exclude Time 범위 안에 랜덤 숫자가 들어있는지 확인
+                        for (ExcludeEvent item : ExcludeEventList.eventsList) {
+                            if (item.getStart_hour() <= randomNum && item.getEnd_hour() > randomNum) {
+                                flag = true;
+                                break;
                             }
-                            if (!fxevents.isEmpty()) {
-                                for (FixEvent e : fxevents) {
-                                    //Log.d("MyLog", "fixed : " + e.getStart_hour() + "~" + e.getEnd_hour());
-                                    if (e.isPiled(startTime)) {
-                                        ok = true;
-                                    }
-                                }
+                        }
+                        // Fix Time 범위 안에 랜덤 숫자가 들어있는지 확인
+                        for (FixEvent item : FixEventList.fixeventsList) {
+                            if (item.getStart_hour() <= randomNum && item.getEnd_hour() > randomNum) {
+                                flag = true;
+                                break;
                             }
-                            long mNow = System.currentTimeMillis();
-                            java.util.Date mDate = new Date(mNow);
-                            SimpleDateFormat mFormat = new SimpleDateFormat("H");
-                            if(startTime <= Integer.parseInt(mFormat.format(mDate)))
-                            {
-                                Log.d("MyLog", mFormat.format(mDate) + "time , now");
-                                ok = true;
-                            }
-                            Log.d("MyLog", mFormat.format(mDate) + "time , now");
+                        }
+
+                        if(!flag) {
+                            break;
+                        } else {
+                            randomNum = RandomNum();
                         }
                     }
-                    else // 비어있으면 바로 적용
-                    {
-                        startTime = RandomNum();
-                    }
-                    writeNewEvent(Date, startTime, eventName, false);
+
+                    // 최종 선택된 랜덤 숫자로 이벤트 생성
+                    writeNewEvent(formattedDate(LocalDate.now()), randomNum, eventName, false);
                 } else {
                     Toast.makeText(getContext(), "내용을 입력하세요", Toast.LENGTH_LONG).show();
                 }
                 dismiss();
             }
         });
+        cancle_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     public void writeNewEvent(String date, int time, String content, boolean checked) {
-        MyDayEvent event = new MyDayEvent(postNum+1, date, time, content, checked);
+        MyDayEvent event = new MyDayEvent(postNum + 1, date, time, content, checked);
         MyDayEventList.eventsList.add(event);
-        mDatabase.child("event").child(String.valueOf(postNum+1)).setValue(event);
+        mDatabase.child(currentUser.getUid()).child("event").child(String.valueOf(postNum + 1)).setValue(event);
     }
 
     public static int RandomNum() {
         Random random = new Random();
-        int time = random.nextInt(24) + 1;
 
-        return time;
+        return random.nextInt(24) + 1;
     }
 
     @Override

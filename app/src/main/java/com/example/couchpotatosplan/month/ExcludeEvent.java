@@ -24,37 +24,6 @@ public class ExcludeEvent {
         this.content = content;
     }
 
-    public boolean isPiled(int t)
-    {
-        if(start_hour < t && t < end_hour)
-        {
-            return true;
-        }
-        if(start_hour == t)
-        {
-            if(start_min == 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        if(end_hour == t)
-        {
-            if(end_min == 0)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public Long getId() {
         return id;
     }

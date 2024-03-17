@@ -59,16 +59,16 @@ public class MainActivity extends AppCompatActivity {
                 bottomNavigationView.setBackgroundColor(Color.rgb(143, 186, 216));
                 break;
             case 1:
-                bottomNavigationView.setBackgroundColor(Color.rgb(255, 211, 26));
+                bottomNavigationView.setBackgroundColor(Color.rgb(255, 196, 0));
                 break;
             case 2:
-                bottomNavigationView.setBackgroundColor(Color.rgb(234, 102, 118));
+                bottomNavigationView.setBackgroundColor(Color.rgb(214, 92, 107));
                 break;
             case 3:
-                bottomNavigationView.setBackgroundColor(Color.rgb(248, 213, 224));
+                bottomNavigationView.setBackgroundColor(Color.rgb(201, 117, 127));
                 break;
             case 4:
-                bottomNavigationView.setBackgroundColor(Color.rgb(102, 100, 139));
+                bottomNavigationView.setBackgroundColor(Color.rgb(97, 95, 133));
                 break;
             case 5:
                 bottomNavigationView.setBackgroundColor(Color.rgb(48, 52, 63));

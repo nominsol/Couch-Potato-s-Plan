@@ -6,6 +6,8 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.couchpotatosplan.login.UserLoginActivity;
+
 public class SplashActivity extends AppCompatActivity {
 
     @Override
@@ -17,7 +19,7 @@ public class SplashActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(getApplicationContext(), com.example.couchpotatosplan.MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), UserLoginActivity.class);
                 startActivity(intent);
                 finish();
             }

@@ -19,4 +19,13 @@
         <item name="android:textColor">@color/basic</item>
         <item name="android:colorAccent">@color/basic</item>
     </style>
+    <style name="AlertDialogCustomStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:textColorPrimary">#595959</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:colorAccent">@color/basic</item>
+    </style>
+
+    <style name="MyCheckBox_basic" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/basic</item>
+    </style>
 </resources>

@@ -17,6 +17,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.couchpotatosplan.R;
+import com.example.couchpotatosplan.myday.MyDayEvent;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,13 +29,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.time.LocalTime;
 
 public class FixDialog extends DialogFragment {
-
     private EditText eventNameET;
     private TextView start_tv;
     private TextView end_tv;
     private Button save_btn;
     private Button cancel_btn;
     private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
     private TimePickerDialog dialog;
     private long postNum;
     private int start_time_hour = -1;
@@ -48,12 +52,20 @@ public class FixDialog extends DialogFragment {
 
         // Write a message to the database
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
 
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists())
-                    postNum = (snapshot.child("fix").getChildrenCount());
+                if (snapshot.exists()) {
+                    for (DataSnapshot dataSnapshot : snapshot.child(currentUser.getUid()).child("fix").getChildren()) {
+                        FixEvent post = dataSnapshot.getValue(FixEvent.class);
+                        if (post != null) {
+                            postNum = post.getId();
+                        }
+                    }
+                }
             }
 
             @Override
@@ -124,7 +136,7 @@ public class FixDialog extends DialogFragment {
 
     public void writeNewEvent(int start_hour, int start_min, int end_hour, int end_min, String content) {
         FixEvent event = new FixEvent(postNum+1, start_hour, start_min, end_hour, end_min, content);
-        mDatabase.child("fix").child(String.valueOf(postNum+1)).setValue(event);
+        mDatabase.child(currentUser.getUid()).child("fix").child(String.valueOf(postNum+1)).setValue(event);
     }
 
     @Override
